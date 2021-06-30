@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class BookService {
@@ -57,31 +58,30 @@ public class BookService {
         return calculatePrice(buyList);
     }
 
-    private double calculatePrice(List<Integer> buyList) {
+    double calculatePrice(List<Integer> buyList) {
         double price = 0;
         Map<Integer, Integer> map = new HashMap<>();
         for (Integer id : buyList) {
-            map.put(id, map.getOrDefault(id, 0)+1);
+            if(map.get(id) == null) map.put(id, 1);
+            else map.put(id, map.get(id)+1);
         }
         int group = 0;
         int size = map.size();
         while(size > 0) {
             for (Map.Entry<Integer,Integer> order : map.entrySet()) {
+                group = map.size();
                 if(order.getValue() > 0) {
-                    group++;
-                    order.setValue(order.getValue()-1);
+                    map.put(order.getKey(), order.getValue() - 1);
                 }
-                if(order.getValue() == 0) {
-                    map.remove(order.getKey());
-                }
-                size = map.size();
             }
+            map.keySet().removeIf(key -> map.get(key)==0);
+            size = map.size();
             price += discount(group);
         }
         return price;
     }
 
-    private double discount(int group) {
+    double discount(int group) {
         if(group == 5) return 5*0.75*100;
         if(group == 4) return 4*0.8*100;
         if(group == 3) return 3*0.9*100;
