@@ -5,9 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -30,6 +27,16 @@ class BookControllerTest {
         assertEquals(100, response.getPrice());
         assertEquals(100, response.getStock());
         assertEquals(expected, response);
+    }
+
+    @Test
+    public void createNewBook() {
+        Book request = new Book(3,"Harry Potter and Prisoner of Azkaban",100,100);
+        BookResponse response = restTemplate.postForObject("/book", request, BookResponse.class);
+        assertEquals(request.getId(), response.getId());
+        assertEquals(request.getTitle(), response.getTitle());
+        assertEquals(request.getPrice(), response.getPrice());
+        assertEquals(request.getStock(), response.getStock());
     }
 
 
