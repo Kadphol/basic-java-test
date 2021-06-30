@@ -25,7 +25,16 @@ GET /books/{:id}
  "stock": 100
 }
 ```
-POST /purchase
+POST /book
+```json
+{
+  "id": 1,
+  "title": "Harry Potter and Philosopher's Stone",
+  "price": 100,
+  "stock": 100
+}
+```
+PUT /order
 
 Request
 ```json
