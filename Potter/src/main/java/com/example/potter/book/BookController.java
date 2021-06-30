@@ -32,7 +32,7 @@ public class BookController {
         return bookService.addBook(book);
     }
 
-    @PutMapping("/order")
+    @PostMapping("/order")
     public double orderBook(@RequestBody List<BookRequest> order) {
         return bookService.orderBook(order);
     }

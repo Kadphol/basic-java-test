@@ -34,7 +34,7 @@ POST /book
   "stock": 100
 }
 ```
-PUT /order
+POST /order
 
 Request
 ```json
