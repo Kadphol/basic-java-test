@@ -37,4 +37,8 @@ public class BookService {
         }
         throw new BookNotFoundException("NO BOOKS FOUND!!");
     }
+
+    public Book addBook(Book book) {
+        return repository.save(book);
+    }
 }
