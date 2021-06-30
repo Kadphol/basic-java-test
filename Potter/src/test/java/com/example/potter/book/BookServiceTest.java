@@ -32,4 +32,17 @@ class BookServiceTest {
         assertEquals(100, result.getPrice());
         assertEquals(100, result.getStock());
     }
+
+    @Test
+    public void BookNotFound() {
+        when(repository.findById(100)).thenReturn(
+                Optional.empty()
+        );
+
+        BookService service = new BookService();
+        service.setRepository(repository);
+
+        BookNotFoundException exception = assertThrows(BookNotFoundException.class, () -> service.getBook(100));
+        assertEquals("Book id 100 NOT FOUND!",exception.getMessage());
+    }
 }
