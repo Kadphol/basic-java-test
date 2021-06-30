@@ -17,7 +17,7 @@ class BookServiceTest {
     private BookRepository repository;
 
     @Test
-    public void foundBookID01() {
+    public void foundBookID01() throws BookNotFoundException {
         Book mock = new Book(1,"Harry Potter and Philosopher's Stone",100,100);
         when(repository.findById(1)).thenReturn(
                 Optional.of(mock)
