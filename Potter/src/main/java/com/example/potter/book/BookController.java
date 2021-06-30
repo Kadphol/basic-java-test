@@ -31,4 +31,9 @@ public class BookController {
     public Book addBook(@RequestBody Book book) {
         return bookService.addBook(book);
     }
+
+    @PutMapping("/order")
+    public double orderBook(@RequestBody List<BookRequest> order) {
+        return bookService.orderBook(order);
+    }
 }
