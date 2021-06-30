@@ -1,3 +1,4 @@
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -5,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.opencsv.CSVWriter;
 import org.json.JSONObject;
 
 public class GetEmployee {
@@ -34,8 +36,8 @@ public class GetEmployee {
                 JSONObject obj = new JSONObject(line);
                 employees.add(new Employee(employeeId,
                         1,
-                        Short.parseShort(obj.getString("id")),
-                        Short.parseShort(obj.getString("albumId")),
+                        Short.parseShort(String.valueOf(obj.getInt("id"))),
+                        Short.parseShort(String.valueOf(obj.getInt("albumId"))),
                         obj.getString("title"),
                         obj.getString("url"),
                         obj.getString("thumbnailUrl")
@@ -44,7 +46,39 @@ public class GetEmployee {
         }
     }
     public static void main(String[] args) throws IOException {
-        int employeeId = Integer.parseInt(args[0]);
-        getData(employeeId);
+        try {
+            int employeeId = Integer.parseInt(args[0]);
+            System.out.println("Getting Data...");
+            getData(employeeId);
+            List<String[]> data = new ArrayList<>();
+            System.out.println("Writting Data...");
+            String[] header = {"EmployeeId", "ThreadId", "Id", "AlbumId", "Title", "Url", "ThumbnailUrl"};
+            data.add(header);
+            for(Employee employee: employees) {
+                String[] tmp = {
+                        String.valueOf(employee.getEmployeeId()),
+                        String.valueOf(employee.getThreadId()),
+                        String.valueOf(employee.getId()),
+                        String.valueOf(employee.getAlbumId()),
+                        employee.getTitle(),
+                        employee.getUrl(),
+                        employee.getThumbnailUrl()
+                };
+                data.add(tmp);
+            }
+            writeCSV(data);
+            System.out.println("Finished.");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new ArrayIndexOutOfBoundsException("Employee ID needed: " + String.valueOf(e));
+        }
+    }
+
+    private static void writeCSV(List<String[]> data) {
+        try {
+            CSVWriter writer = new CSVWriter(new FileWriter("employee.csv"));
+            writer.writeAll(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
